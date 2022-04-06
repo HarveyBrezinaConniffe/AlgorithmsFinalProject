@@ -27,5 +27,15 @@ public class Tests {
 		correctCompletions.add("ar");
 		correctCompletions.add("arrot");
 		assertEquals("Testing TST autocomplete.", correctCompletions, predictions);
+
+		predictions = tst.autocomplete("do");
+		correctCompletions = new ArrayList<String>();
+		correctCompletions.add("g");
+		correctCompletions.add("me");
+
+		predictions = tst.autocomplete("car");
+		correctCompletions = new ArrayList<String>();
+		correctCompletions.add("");
+		correctCompletions.add("rot");
 	}
 }
