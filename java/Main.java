@@ -1,6 +1,7 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
+import java.util.ArrayList;
 
 public class Main {
 	static Scanner inputScanner;
@@ -83,6 +84,8 @@ public class Main {
 		while(choice == -1) {
 			if(inputScanner.hasNextInt()) {
 				int nextInt = inputScanner.nextInt();
+				// Clear newline from buffer
+				inputScanner.skip("\\R?");
 				if(nextInt >= 1 && nextInt <= 3) {
 					choice = nextInt;
 				}
@@ -116,7 +119,22 @@ public class Main {
 
 	public static void searchByNameMenu() {
 		System.out.println();
-		System.out.println("Search for bus stops by name.");
+		System.out.println("Searching for bus stops by name.");
+		System.out.println("Enter some or all of a bus stop name to seach for matching stops.");
+		System.out.print(">> ");
+
+		String stopName = inputScanner.nextLine();
+		// Convert to upper case
+		stopName = stopName.toUpperCase();
+		// Get completions
+		ArrayList<String> autocompletions = stopNameSearchTree.autocomplete(stopName);
+
+		for(String completion : autocompletions) {
+			String completedStopName = stopName+completion;
+			System.out.println("--------------------");
+			System.out.println(completedStopName);
+			System.out.println("--------------------");
+		}
 	}
 
 	public static void searchByArrivalTime() {
