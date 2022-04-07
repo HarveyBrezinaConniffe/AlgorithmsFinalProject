@@ -1,3 +1,5 @@
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 public class Main {
@@ -5,7 +7,59 @@ public class Main {
 
 	public static void main(String[] args) {
 		inputScanner = new Scanner(System.in);
-		mainMenu();
+		importTSTData();
+		//mainMenu();
+	}
+
+	// Function that imports bus stop names for use by TST.
+	public static TST importTSTData() {
+		// Create TST
+		TST tree = new TST();
+
+		// Read in file.
+		try {
+			File busStopsFile = new File("../data/stops.txt");				
+
+			Scanner stopsScanner = new Scanner(busStopsFile);
+
+			// Go through each line in file.
+			String nextLine;
+			while(stopsScanner.hasNextLine()) {
+				nextLine = stopsScanner.nextLine();
+				String[] components = nextLine.split("\\,");
+				String name = components[2];
+				name = moveKeywords(name);
+				System.out.println(name);
+			}
+		}
+		catch(FileNotFoundException e) {}
+
+		return tree;
+	}
+
+	// Function that moves the keywords from a bus stop name to end.
+	public static String moveKeywords(String stopName) {
+		String output = "";
+		// Split name by space
+		String[] stringComponents = stopName.split(" ");
+
+		// First pass through split string
+		for(String component : stringComponents) {
+			// If it's not a keyword append it to the end of the output.
+			if(!(component.equals("FLAGSTOP") || component.equals("WB") || component.equals("NB") || component.equals("SB") || component.equals("EB"))) {
+				output += component+" ";
+			}
+		}
+
+		// Second pass through split string
+		for(String component : stringComponents) {
+			// If it is a keyword append it to the end of the output.
+			if(component.equals("FLAGSTOP") || component.equals("WB") || component.equals("NB") || component.equals("SB") || component.equals("EB")) {
+				output += component+" ";
+			}
+		}
+
+		return output;
 	}
 
 	public static void mainMenu() {
