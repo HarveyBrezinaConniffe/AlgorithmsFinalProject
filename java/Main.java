@@ -4,11 +4,12 @@ import java.util.Scanner;
 
 public class Main {
 	static Scanner inputScanner;
+	static TST stopNameSearchTree;
 
 	public static void main(String[] args) {
 		inputScanner = new Scanner(System.in);
-		importTSTData();
-		//mainMenu();
+		stopNameSearchTree = importTSTData();
+		mainMenu();
 	}
 
 	// Function that imports bus stop names for use by TST.
@@ -25,11 +26,16 @@ public class Main {
 			// Go through each line in file.
 			String nextLine;
 			while(stopsScanner.hasNextLine()) {
+				// Load next line.
 				nextLine = stopsScanner.nextLine();
+				// Split components apart.
 				String[] components = nextLine.split("\\,");
+				// Get the name.
 				String name = components[2];
+				// Move keywords to end of name.
 				name = moveKeywords(name);
-				System.out.println(name);
+				// Add name to TST.
+				tree.insert(name);
 			}
 		}
 		catch(FileNotFoundException e) {}
@@ -58,6 +64,9 @@ public class Main {
 				output += component+" ";
 			}
 		}
+
+		// Remove final " " from output.
+		output = output.substring(0, output.length()-1);
 
 		return output;
 	}
