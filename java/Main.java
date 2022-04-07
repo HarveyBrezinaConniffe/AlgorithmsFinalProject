@@ -35,6 +35,29 @@ public class Main {
 			}
 		}
 
-		System.out.println(choice);
+		if(choice == 1) {
+			shortestPathMenu();
+		}
+		else if(choice == 2) {
+			searchByNameMenu();
+		}
+		else if(choice == 3) {
+			searchByArrivalTime();
+		}
+	}
+
+	public static void shortestPathMenu() {
+		System.out.println();
+		System.out.println("Find the shortest path between two bus stops.");
+	}
+
+	public static void searchByNameMenu() {
+		System.out.println();
+		System.out.println("Search for bus stops by name.");
+	}
+
+	public static void searchByArrivalTime() {
+		System.out.println();
+		System.out.println("Search for trips by arrival time.");
 	}
 }
