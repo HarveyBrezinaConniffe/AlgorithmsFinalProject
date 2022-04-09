@@ -2,15 +2,17 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Main {
 	static Scanner inputScanner;
 	static TST stopNameSearchTree;
-
+	static HashMap<String, BusStopData> busStopDetails;
 
 	public static void main(String[] args) {
 		inputScanner = new Scanner(System.in);
 		stopNameSearchTree = importTSTData();
+		busStopDetails = new HashMap<String, BusStopData>();
 		mainMenu();
 	}
 
@@ -38,6 +40,20 @@ public class Main {
 				name = moveKeywords(name);
 				// Add name to TST.
 				tree.insert(name);
+
+				// Create new BusStopData object
+				BusStopData data = new BusStopData(Integer.parseInt(components[0]), 
+								   Integer.parseInt(components[1]), 
+								   components[2], 
+								   components[3], 
+								   Double.parseDouble(components[4]), 
+								   Double.parseDouble(components[5]), 
+								   Integer.parseInt(components[6]), 
+								   components[7], 
+								   components[8], 
+								   Integer.parseInt(components[9]));
+				// Add data to hashmap
+				busStopDetails.put(name, data);
 			}
 		}
 		catch(FileNotFoundException e) {}
@@ -144,7 +160,7 @@ public class Main {
 	}
 
 	// Class used to store data about a bus stop.
-	private class BusStopData {
+	private static class BusStopData {
 		int stopID, stopCode, zoneID, parentStation;
 		double stopLat, stopLon;
 		String stopName, stopDesc, stopURL, stopLocationType;
