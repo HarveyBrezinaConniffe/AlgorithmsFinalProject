@@ -8,11 +8,13 @@ public class Main {
 	static Scanner inputScanner;
 	static TST stopNameSearchTree;
 	static HashMap<String, BusStopData> busStopDetails;
+	static ShortestPaths shortestPaths;
 
 	public static void main(String[] args) {
 		inputScanner = new Scanner(System.in);
 		busStopDetails = new HashMap<String, BusStopData>();
 		stopNameSearchTree = importTSTData();
+		shortestPaths = new ShortestPaths();
 		mainMenu();
 	}
 
@@ -23,7 +25,7 @@ public class Main {
 
 		// Read in file.
 		try {
-			File busStopsFile = new File("../data/stops.txt");				
+			File busStopsFile = new File("../data/stops.txt");
 
 			Scanner stopsScanner = new Scanner(busStopsFile);
 
