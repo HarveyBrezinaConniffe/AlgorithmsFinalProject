@@ -7,6 +7,7 @@ public class Main {
 	static Scanner inputScanner;
 	static TST stopNameSearchTree;
 
+
 	public static void main(String[] args) {
 		inputScanner = new Scanner(System.in);
 		stopNameSearchTree = importTSTData();
@@ -140,5 +141,26 @@ public class Main {
 	public static void searchByArrivalTime() {
 		System.out.println();
 		System.out.println("Search for trips by arrival time.");
+	}
+
+	// Class used to store data about a bus stop.
+	private class BusStopData {
+		int stopID, stopCode, zoneID, parentStation;
+		double stopLat, stopLon;
+		String stopName, stopDesc, stopURL, stopLocationType;
+
+		public BusStopData(int stopID, int stopCode, String stopName, String stopDesc, double stopLat, double stopLon, 
+				   int zoneID, String stopURL, String stopLocationType, int parentStation) {
+			this.stopID = stopID;
+			this.stopCode = stopCode;
+			this.zoneID = zoneID;
+			this.parentStation = parentStation;
+			this.stopLat = stopLat;
+			this.stopLon = stopLon;
+			this.stopName = stopName;
+			this.stopDesc = stopDesc;
+			this.stopURL = stopURL;
+			this.stopLocationType = stopLocationType;
+		}
 	}
 }
