@@ -72,5 +72,29 @@ public class ShortestPaths {
 			}
 		}	
 		catch(FileNotFoundException e) {}
+
+		try {
+			File busStopsFile = new File("../data/stop_times.txt");
+			Scanner scanner = new Scanner(busStopsFile);
+
+			String nextLine = scanner.nextLine();
+			String lastLine = scanner.nextLine();
+			int lastID = Integer.parseInt(lastLine.split("\\,")[0]);
+			int lastStop = Integer.parseInt(lastLine.split("\\,")[3]);
+			while(scanner.hasNextLine()) {
+				nextLine = scanner.nextLine();
+				String[] components = nextLine.split("\\,");
+				int currentID = Integer.parseInt(components[0]);
+				int currentStop = Integer.parseInt(components[3]);
+				if(currentID == lastID) {
+					int fromIndex = idToIndex.get(lastStop);
+					int toIndex = idToIndex.get(currentStop);
+					graph.addEdge(fromIndex, toIndex, 1);
+				}
+				lastID = currentID;
+				lastStop = currentStop;
+			}
+		}
+		catch(FileNotFoundException e) {}
 	}
 }
