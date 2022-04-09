@@ -36,9 +36,41 @@ public class ShortestPaths {
 			graph = new EWDGraph(currentNumber);
 		}
 		catch(FileNotFoundException e) {}
+
+		importData();
 	}
 
 	public void importData() {
-		
+		try {
+			File busStopsFile = new File("../data/transfers.txt");
+			Scanner scanner = new Scanner(busStopsFile);
+
+			String nextLine = scanner.nextLine();
+			while(scanner.hasNextLine()) {
+				nextLine = scanner.nextLine();
+				String[] components = nextLine.split("\\,");
+				int fromID = Integer.parseInt(components[0]);
+				int toID = Integer.parseInt(components[1]);
+				int transferType = Integer.parseInt(components[2]);
+				int minTransferTime = -1;
+				// If transferType == 0 there won't be a minTransferTime
+				if(components.length > 3) {
+					minTransferTime = Integer.parseInt(components[3]);
+				}
+
+				int fromIndex = idToIndex.get(fromID);
+				int toIndex = idToIndex.get(toID);
+
+				double cost = 99999;
+				if(transferType == 0) {
+					cost = 2;
+				}
+				else if(transferType == 2) {
+					cost = minTransferTime/100.;
+				}
+				graph.addEdge(fromIndex, toIndex, cost);
+			}
+		}	
+		catch(FileNotFoundException e) {}
 	}
 }
