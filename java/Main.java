@@ -245,6 +245,12 @@ public class Main {
 		int secondID = Integer.parseInt(busStopDetails.get(secondStop).stopID);
 		Path route = shortestPaths.shortestPaths(firstID, secondID);
 
+		if(route == null) {
+			System.out.println();
+			System.out.println("There is no route between these stops!");
+			return;
+		}
+
 		System.out.println();
 		System.out.printf("Shortest route has a cost of: %f\n", route.cost);
 		System.out.println("Stops on route:");
