@@ -271,6 +271,39 @@ public class Main {
 		}
 	}
 
+	public static boolean isValidTime(String currentTime) {
+		String[] components = currentTime.split("\\:");
+		if(components.length != 3) {
+			System.out.println("Please enter a time in the format HH:MM:SS");
+			return false;
+		}
+
+		int hours, minutes, seconds;
+
+		try {
+			hours = Integer.parseInt(components[0]);
+			minutes = Integer.parseInt(components[1]);
+			seconds = Integer.parseInt(components[2]);
+		}
+		catch(Exception e) {
+			System.out.println("Hours, Minutes and Seconds must be valid whole numbers!");	
+			return false;
+		}
+		if(hours < 0 || hours > 23) {
+			System.out.println("Hours must be between 0 and 23");
+			return false;
+		}
+		if(minutes < 0 || minutes > 59) {
+			System.out.println("Minutes must be between 0 and 59");
+			return false;
+		}
+		if(seconds < 0 || seconds > 59) {
+			System.out.println("Seconds must be between 0 and 59");
+			return false;
+		}
+		return true;
+	}
+
 	public static void searchByArrivalTime() {
 		System.out.println();
 		System.out.println("Search for trips by arrival time.");
@@ -278,6 +311,10 @@ public class Main {
 		System.out.print(">> ");
 
 		String arrivalTime = inputScanner.nextLine();
+		while(!isValidTime(arrivalTime)) {
+			System.out.print(">> ");
+			arrivalTime = inputScanner.nextLine();
+		}
 
 		HashMap<Integer, Trip> trips = arrivalTimeToTrips.get(arrivalTime);
 
