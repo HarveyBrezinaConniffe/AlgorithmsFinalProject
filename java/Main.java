@@ -53,6 +53,11 @@ public class Main {
 				);
 
 				String arrivalTime = components[1];
+
+				if(!isValidTime(arrivalTime, false)) {
+					continue;
+				}
+
 				if(!arrivalTimeToTrips.containsKey(arrivalTime)) {
 					arrivalTimeToTrips.put(arrivalTime, new HashMap<Integer, Trip>());
 				}
@@ -271,9 +276,10 @@ public class Main {
 		}
 	}
 
-	public static boolean isValidTime(String currentTime) {
+	public static boolean isValidTime(String currentTime, boolean print) {
 		String[] components = currentTime.split("\\:");
 		if(components.length != 3) {
+			if(print)
 			System.out.println("Please enter a time in the format HH:MM:SS");
 			return false;
 		}
@@ -286,18 +292,22 @@ public class Main {
 			seconds = Integer.parseInt(components[2]);
 		}
 		catch(Exception e) {
+			if(print)
 			System.out.println("Hours, Minutes and Seconds must be valid whole numbers!");	
 			return false;
 		}
 		if(hours < 0 || hours > 23) {
+			if(print)
 			System.out.println("Hours must be between 0 and 23");
 			return false;
 		}
 		if(minutes < 0 || minutes > 59) {
+			if(print)
 			System.out.println("Minutes must be between 0 and 59");
 			return false;
 		}
 		if(seconds < 0 || seconds > 59) {
+			if(print)
 			System.out.println("Seconds must be between 0 and 59");
 			return false;
 		}
@@ -311,7 +321,7 @@ public class Main {
 		System.out.print(">> ");
 
 		String arrivalTime = inputScanner.nextLine();
-		while(!isValidTime(arrivalTime)) {
+		while(!isValidTime(arrivalTime, true)) {
 			System.out.print(">> ");
 			arrivalTime = inputScanner.nextLine();
 		}
