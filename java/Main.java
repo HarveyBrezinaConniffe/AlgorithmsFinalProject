@@ -3,6 +3,7 @@ import java.io.FileNotFoundException;
 import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Collections;
 
 public class Main {
 	static Scanner inputScanner;
@@ -11,13 +12,61 @@ public class Main {
 	static HashMap<Integer, String> stopIDToName;
 	static ShortestPaths shortestPaths;
 
+	static HashMap<String, HashMap<Integer, Trip>> arrivalTimeToTrips;
+
 	public static void main(String[] args) {
 		inputScanner = new Scanner(System.in);
 		busStopDetails = new HashMap<String, BusStopData>();
 		stopIDToName = new HashMap<Integer, String>();
 		stopNameSearchTree = importTSTData();
 		shortestPaths = new ShortestPaths();
+		arrivalTimeToTrips = new HashMap<String, HashMap<Integer, Trip>>();
+		loadTrips();
 		mainMenu();
+	}
+
+	public static void loadTrips() {
+		try {
+			File tripsFile = new File("../data/stop_times.txt");
+			Scanner tripsScanner = new Scanner(tripsFile);
+
+			String nextLine = tripsScanner.nextLine();
+			while(tripsScanner.hasNextLine()) {
+				nextLine = tripsScanner.nextLine();
+				String[] components = nextLine.split("\\,");
+
+				String shapeDistTraveled = "";
+				if(components.length == 9) {
+					shapeDistTraveled = components[8];
+				}
+
+				Trip currentTrip = new Trip(
+					components[0],
+					components[1],
+					components[2],
+					components[3],
+					components[4],
+					components[5],
+					components[6],
+					components[7],
+					shapeDistTraveled
+				);
+
+				String arrivalTime = components[1];
+
+				if(!isValidTime(arrivalTime, false)) {
+					continue;
+				}
+
+				if(!arrivalTimeToTrips.containsKey(arrivalTime)) {
+					arrivalTimeToTrips.put(arrivalTime, new HashMap<Integer, Trip>());
+				}
+
+				int tripID = Integer.parseInt(components[0]);
+				arrivalTimeToTrips.get(arrivalTime).put(tripID, currentTrip);
+			}
+		}
+		catch(FileNotFoundException e) {}
 	}
 
 	// Function that imports bus stop names for use by TST.
@@ -227,9 +276,81 @@ public class Main {
 		}
 	}
 
+	public static boolean isValidTime(String currentTime, boolean print) {
+		String[] components = currentTime.split("\\:");
+		if(components.length != 3) {
+			if(print)
+			System.out.println("Please enter a time in the format HH:MM:SS");
+			return false;
+		}
+
+		int hours, minutes, seconds;
+
+		try {
+			hours = Integer.parseInt(components[0]);
+			minutes = Integer.parseInt(components[1]);
+			seconds = Integer.parseInt(components[2]);
+		}
+		catch(Exception e) {
+			if(print)
+			System.out.println("Hours, Minutes and Seconds must be valid whole numbers!");	
+			return false;
+		}
+		if(hours < 0 || hours > 23) {
+			if(print)
+			System.out.println("Hours must be between 0 and 23");
+			return false;
+		}
+		if(minutes < 0 || minutes > 59) {
+			if(print)
+			System.out.println("Minutes must be between 0 and 59");
+			return false;
+		}
+		if(seconds < 0 || seconds > 59) {
+			if(print)
+			System.out.println("Seconds must be between 0 and 59");
+			return false;
+		}
+		return true;
+	}
+
 	public static void searchByArrivalTime() {
 		System.out.println();
 		System.out.println("Search for trips by arrival time.");
+		System.out.println("Please enter an arrival time in HH:MM:SS format:");
+		System.out.print(">> ");
+
+		String arrivalTime = inputScanner.nextLine();
+		while(!isValidTime(arrivalTime, true)) {
+			System.out.print(">> ");
+			arrivalTime = inputScanner.nextLine();
+		}
+
+		if(!arrivalTimeToTrips.containsKey(arrivalTime)) {
+			System.out.println("There are no trips arriving at that time!");
+			System.out.println();
+			return;
+		}
+
+		HashMap<Integer, Trip> trips = arrivalTimeToTrips.get(arrivalTime);
+
+		ArrayList<Integer> tripIDs = new ArrayList<Integer>(trips.keySet());
+		Collections.sort(tripIDs);
+
+		for(Integer tripID : tripIDs) {
+			Trip currentTrip = trips.get(tripID);
+			System.out.println("--------------------");
+			System.out.printf("Trip ID: %d\n", tripID);
+			System.out.printf("Arrival Time: %s\n", currentTrip.arrivalTime);
+			System.out.printf("Departure Time: %s\n", currentTrip.departureTime);
+			System.out.printf("Stop ID: %s\n", currentTrip.stopID);
+			System.out.printf("Stop Sequence: %s\n", currentTrip.stopSequence);
+			System.out.printf("Stop Head Sign: %s\n", currentTrip.stopHeadsign);
+			System.out.printf("Pickup Type: %s\n", currentTrip.pickupType);
+			System.out.printf("Drop Off Type: %s\n", currentTrip.dropOffType);
+			System.out.printf("Shape Dist Traveled: %s\n", currentTrip.shapeDistTraveled);
+			System.out.println("--------------------");
+		}
 	}
 
 	// Class used to store data about a bus stop.
@@ -248,6 +369,22 @@ public class Main {
 			this.stopDesc = stopDesc;
 			this.stopURL = stopURL;
 			this.stopLocationType = stopLocationType;
+		}
+	}
+
+	private static class Trip {
+		String tripID, arrivalTime, departureTime, stopID, stopSequence, stopHeadsign, pickupType ,dropOffType, shapeDistTraveled;
+
+		public Trip(String tripID, String arrivalTime, String departureTime, String stopID, String stopSequence, String stopHeadsign, String pickupType, String dropOffType, String shapeDistTraveled) {
+			this.tripID = tripID;
+			this.arrivalTime = arrivalTime;
+			this.departureTime = departureTime;
+			this.stopID = stopID;
+			this.stopSequence = stopSequence;
+			this.stopHeadsign = stopHeadsign;
+			this.pickupType = pickupType;
+			this.dropOffType = dropOffType;
+			this.shapeDistTraveled = shapeDistTraveled;
 		}
 	}
 }
