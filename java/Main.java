@@ -285,8 +285,17 @@ public class Main {
 		Collections.sort(tripIDs);
 
 		for(Integer tripID : tripIDs) {
+			Trip currentTrip = trips.get(tripID);
 			System.out.println("--------------------");
-			System.out.println(tripID);
+			System.out.printf("Trip ID: %d\n", tripID);
+			System.out.printf("Arrival Time: %s\n", currentTrip.arrivalTime);
+			System.out.printf("Departure Time: %s\n", currentTrip.departureTime);
+			System.out.printf("Stop ID: %s\n", currentTrip.stopID);
+			System.out.printf("Stop Sequence: %s\n", currentTrip.stopSequence);
+			System.out.printf("Stop Head Sign: %s\n", currentTrip.stopHeadsign);
+			System.out.printf("Pickup Type: %s\n", currentTrip.pickupType);
+			System.out.printf("Drop Off Type: %s\n", currentTrip.dropOffType);
+			System.out.printf("Shape Dist Traveled: %s\n", currentTrip.shapeDistTraveled);
 			System.out.println("--------------------");
 		}
 	}
