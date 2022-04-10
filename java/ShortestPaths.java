@@ -1,7 +1,10 @@
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
+import java.util.ArrayList;
 
 public class ShortestPaths {
 	EWDGraph graph;
@@ -96,5 +99,88 @@ public class ShortestPaths {
 			}
 		}
 		catch(FileNotFoundException e) {}
+	}
+
+	/**
+	 * @param sourceNode: The source node.
+	 * @param destinationNode: The destination node.
+	 *
+	 * @return: A Path object containing the shortest path and it's cost.
+	**/
+	public Path shortestPaths(int sourceStop, int destStop) {
+		int sourceNode = idToIndex.get(sourceStop);
+		int destNode = idToIndex.get(destStop);
+
+		// Initialize array to store which nodes are finalized and the distances from the source to each.
+		Set<Integer> finalizedNodes = new HashSet<Integer>();	
+		double[] distances = new double[graph.getSize()];
+
+		// Array to store the parent of each node
+		int[] parents = new int[graph.getSize()];
+
+		// Set all distances to max value and the distance to source node 0.	
+		for(int i = 0;i < graph.getSize();i++) {
+			distances[i] = Double.MAX_VALUE;
+			// Initialize parent of node to -1
+			parents[i] = -1;
+		}
+		distances[sourceNode] = 0;
+		parents[sourceNode] = -2;
+
+		// Keep going until all nodes are finalized.
+		while(finalizedNodes.size() < graph.getSize()) {
+			// Find the node in distances with the lowest distance.
+			double minDistance = Double.MAX_VALUE;
+			int minNode = -1;
+
+			for(int i = 0;i < graph.getSize();i++) {
+				if(distances[i] < minDistance && !finalizedNodes.contains(i)) {
+					minDistance = distances[i];
+					minNode = i;
+				}
+			}
+			
+			// Check if minNode == -1. If so then this graph is not connected.
+			if(minNode == -1) {
+				double[] returnVal = {-1};
+				return null;
+			}
+
+			// Get the neighbours of min node and update their distances.
+			ArrayList<WeightedEdge> neighbours = graph.getNeighbours(minNode);
+			for(WeightedEdge neighbour : neighbours) {
+				double newDistance = distances[minNode]+neighbour.weight;
+				if(distances[neighbour.to] > newDistance) {
+					distances[neighbour.to] = newDistance;
+					parents[neighbour.to] = minNode;
+				}
+			}
+
+			// Finalize the min node.
+			finalizedNodes.add(minNode);
+
+			if(minNode == destNode) {
+				break;			
+			}
+		}
+
+		// Backtrace from destination to source.
+		ArrayList<Integer> stopIndexes = new ArrayList<Integer>();
+		int currentNode = destNode;
+		while(currentNode != sourceNode) {
+			stopIndexes.add(currentNode);
+			currentNode = parents[currentNode];
+		}
+		stopIndexes.add(currentNode);
+
+		// Convert from indexes to ID's and reverse.
+		ArrayList<Integer> stops = new ArrayList<Integer>();
+		for(int i = stopIndexes.size()-1;i>=0;i--) {
+			currentNode = stopIndexes.get(i);
+			int currentStop = indexToID.get(i); 
+			stops.add(currentStop);
+		}
+
+		return new Path(stops, distances[destNode]);
 	}
 }

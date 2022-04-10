@@ -146,6 +146,47 @@ public class Main {
 	public static void shortestPathMenu() {
 		System.out.println();
 		System.out.println("Find the shortest path between two bus stops.");
+		System.out.println("Enter first bus stop:");
+		System.out.print(">> ");
+
+		// Get first stop.
+		boolean stopExists = false;
+		String firstStop = "";
+		while(!stopExists) {
+			firstStop = inputScanner.nextLine();
+			firstStop = firstStop.toUpperCase();
+			stopExists = busStopDetails.containsKey(firstStop);
+			if(!stopExists) {
+				System.out.println("Sorry! I couldn't find that bus stop?");
+				System.out.println("Enter first bus stop:");
+				System.out.print(">> ");
+			}
+		}
+
+		System.out.println("Enter second bus stop:");
+		System.out.print(">> ");
+		// Get second stop.
+		stopExists = false;
+		String secondStop = "";
+		while(!stopExists) {
+			secondStop = inputScanner.nextLine();
+			secondStop = secondStop.toUpperCase();
+			stopExists = busStopDetails.containsKey(secondStop);
+			if(!stopExists) {
+				System.out.println("Sorry! I couldn't find that bus stop?");
+				System.out.println("Enter second bus stop:");
+				System.out.print(">> ");
+			}
+		}
+		
+		int firstID = Integer.parseInt(busStopDetails.get(firstStop).stopID);	
+		int secondID = Integer.parseInt(busStopDetails.get(secondStop).stopID);
+		Path route = shortestPaths.shortestPaths(firstID, secondID);
+
+		System.out.println();
+		for(Integer stop:route.stops) {
+			System.out.println(stop);
+		}
 	}
 
 	public static void searchByNameMenu() {
