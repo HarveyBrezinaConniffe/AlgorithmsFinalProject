@@ -316,6 +316,12 @@ public class Main {
 			arrivalTime = inputScanner.nextLine();
 		}
 
+		if(!arrivalTimeToTrips.containsKey(arrivalTime)) {
+			System.out.println("There are no trips arriving at that time!");
+			System.out.println();
+			return;
+		}
+
 		HashMap<Integer, Trip> trips = arrivalTimeToTrips.get(arrivalTime);
 
 		ArrayList<Integer> tripIDs = new ArrayList<Integer>(trips.keySet());
