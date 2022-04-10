@@ -3,6 +3,7 @@ import java.io.FileNotFoundException;
 import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Collections;
 
 public class Main {
 	static Scanner inputScanner;
@@ -273,6 +274,21 @@ public class Main {
 	public static void searchByArrivalTime() {
 		System.out.println();
 		System.out.println("Search for trips by arrival time.");
+		System.out.println("Please enter an arrival time in HH:MM:SS format:");
+		System.out.print(">> ");
+
+		String arrivalTime = inputScanner.nextLine();
+
+		HashMap<Integer, Trip> trips = arrivalTimeToTrips.get(arrivalTime);
+
+		ArrayList<Integer> tripIDs = new ArrayList<Integer>(trips.keySet());
+		Collections.sort(tripIDs);
+
+		for(Integer tripID : tripIDs) {
+			System.out.println("--------------------");
+			System.out.println(tripID);
+			System.out.println("--------------------");
+		}
 	}
 
 	// Class used to store data about a bus stop.
