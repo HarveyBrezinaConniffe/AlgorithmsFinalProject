@@ -8,11 +8,13 @@ public class Main {
 	static Scanner inputScanner;
 	static TST stopNameSearchTree;
 	static HashMap<String, BusStopData> busStopDetails;
+	static HashMap<Integer, String> stopIDToName;
 	static ShortestPaths shortestPaths;
 
 	public static void main(String[] args) {
 		inputScanner = new Scanner(System.in);
 		busStopDetails = new HashMap<String, BusStopData>();
+		stopIDToName = new HashMap<Integer, String>();
 		stopNameSearchTree = importTSTData();
 		shortestPaths = new ShortestPaths();
 		mainMenu();
@@ -63,8 +65,9 @@ public class Main {
 								   components[7], 
 								   components[8], 
 								   parentStation);
-				// Add data to hashmap
+				// Add data to hashmaps
 				busStopDetails.put(name, data);
+				stopIDToName.put(Integer.parseInt(components[0]), name);	
 			}
 		}
 		catch(FileNotFoundException e) {}
@@ -184,9 +187,13 @@ public class Main {
 		Path route = shortestPaths.shortestPaths(firstID, secondID);
 
 		System.out.println();
+		System.out.printf("Shortest route has a cost of: %f\n", route.cost);
+		System.out.println("Stops on route:");
 		for(Integer stop:route.stops) {
-			System.out.println(stop);
+			String name = stopIDToName.get(stop);
+			System.out.println(name);
 		}
+		System.out.println();
 	}
 
 	public static void searchByNameMenu() {
