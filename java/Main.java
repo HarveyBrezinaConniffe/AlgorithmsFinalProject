@@ -163,8 +163,9 @@ public class Main {
 			System.out.println("	1. Find the shortest path between two bus stops.");
 			System.out.println("	2. Search for bus stops by name.");
 			System.out.println("	3. Search for trips by arrival time.");
+			System.out.println("Or type exit to quit program!");
 			System.out.print(">> ");
-			
+
 			int choice = -1;
 			while(choice == -1) {
 				if(inputScanner.hasNextInt()) {
@@ -179,10 +180,16 @@ public class Main {
 						System.out.print(">> ");
 					}
 				}	
-				else if(inputScanner.hasNext()) {
-					inputScanner.next();
-					System.out.println("Sorry! I don't understand that input, Please enter a number between 1 and 3!");
-					System.out.print(">> ");
+				else if(inputScanner.hasNextLine()) {
+					String line = inputScanner.nextLine();
+					if(line.equals("exit")) {
+						System.out.println("Goodbye!");
+						System.exit(0);
+					}
+					else {
+						System.out.println("Sorry! I don't understand that input, Please enter a number between 1 and 3!");
+						System.out.print(">> ");
+					}
 				}
 			}
 
