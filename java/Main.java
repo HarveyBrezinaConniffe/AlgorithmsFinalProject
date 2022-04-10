@@ -18,8 +18,11 @@ public class Main {
 		inputScanner = new Scanner(System.in);
 		busStopDetails = new HashMap<String, BusStopData>();
 		stopIDToName = new HashMap<Integer, String>();
+		System.out.println("Importing stops to TST!");
 		stopNameSearchTree = importTSTData();
+		System.out.println("Importing routing data to graph!");
 		shortestPaths = new ShortestPaths();
+		System.out.println("Importing trips!");
 		arrivalTimeToTrips = new HashMap<String, HashMap<Integer, Trip>>();
 		loadTrips();
 		mainMenu();
