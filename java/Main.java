@@ -11,13 +11,56 @@ public class Main {
 	static HashMap<Integer, String> stopIDToName;
 	static ShortestPaths shortestPaths;
 
+	static HashMap<String, HashMap<Integer, Trip>> arrivalTimeToTrips;
+
 	public static void main(String[] args) {
 		inputScanner = new Scanner(System.in);
 		busStopDetails = new HashMap<String, BusStopData>();
 		stopIDToName = new HashMap<Integer, String>();
 		stopNameSearchTree = importTSTData();
 		shortestPaths = new ShortestPaths();
+		arrivalTimeToTrips = new HashMap<String, HashMap<Integer, Trip>>();
+		loadTrips();
 		mainMenu();
+	}
+
+	public static void loadTrips() {
+		try {
+			File tripsFile = new File("../data/stop_times.txt");
+			Scanner tripsScanner = new Scanner(tripsFile);
+
+			String nextLine = tripsScanner.nextLine();
+			while(tripsScanner.hasNextLine()) {
+				nextLine = tripsScanner.nextLine();
+				String[] components = nextLine.split("\\,");
+
+				String shapeDistTraveled = "";
+				if(components.length == 9) {
+					shapeDistTraveled = components[8];
+				}
+
+				Trip currentTrip = new Trip(
+					components[0],
+					components[1],
+					components[2],
+					components[3],
+					components[4],
+					components[5],
+					components[6],
+					components[7],
+					shapeDistTraveled
+				);
+
+				String arrivalTime = components[1];
+				if(!arrivalTimeToTrips.containsKey(arrivalTime)) {
+					arrivalTimeToTrips.put(arrivalTime, new HashMap<Integer, Trip>());
+				}
+
+				int tripID = Integer.parseInt(components[0]);
+				arrivalTimeToTrips.get(arrivalTime).put(tripID, currentTrip);
+			}
+		}
+		catch(FileNotFoundException e) {}
 	}
 
 	// Function that imports bus stop names for use by TST.
@@ -248,6 +291,22 @@ public class Main {
 			this.stopDesc = stopDesc;
 			this.stopURL = stopURL;
 			this.stopLocationType = stopLocationType;
+		}
+	}
+
+	private static class Trip {
+		String tripID, arrivalTime, departureTime, stopID, stopSequence, stopHeadsign, pickupType ,dropOffType, shapeDistTraveled;
+
+		public Trip(String tripID, String arrivalTime, String departureTime, String stopID, String stopSequence, String stopHeadsign, String pickupType, String dropOffType, String shapeDistTraveled) {
+			this.tripID = tripID;
+			this.arrivalTime = arrivalTime;
+			this.departureTime = departureTime;
+			this.stopID = stopID;
+			this.stopSequence = stopSequence;
+			this.stopHeadsign = stopHeadsign;
+			this.pickupType = pickupType;
+			this.dropOffType = dropOffType;
+			this.shapeDistTraveled = shapeDistTraveled;
 		}
 	}
 }
